@@ -1,23 +1,25 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
+const express = require('express'); //your express app
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
 function createWindow () {
-  // Create the browser window.
+  const exp = express();
+  exp.use(express.static(__dirname + '/dist'))
+  exp.listen(8010);
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
-    }
-  })
-
-  // and load the index.html of the app.
-  mainWindow.loadFile('index.html')
+    width: 1280,
+    height: 720,
+    autoHideMenuBar: true,
+    useContentSize: true,
+    resizable: false,
+  });
+  mainWindow.loadURL('http://localhost:8010');
+  mainWindow.focus();
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
@@ -30,6 +32,8 @@ function createWindow () {
     mainWindow = null
   })
 }
+
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
